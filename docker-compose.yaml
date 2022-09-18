@@ -44,7 +44,7 @@ services:
       "--listen-on", "/ip4/0.0.0.0/tcp/40333",
       "--reward-address", "${WALLET_ADDRESS}",
       "--plot-size", "100G"
-    ]gi
+    ]
 volumes:
   subspace-node-data:
   subspace-farmer-data:
