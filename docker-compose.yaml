@@ -18,7 +18,7 @@ services:
       "--rpc-methods", "safe",
       "--unsafe-ws-external",
       "--validator",
-      "--name", "AnnaNow27"
+      "--name", "${NODE_NAME}"
     ]
     healthcheck:
       timeout: 5s
@@ -32,7 +32,7 @@ services:
     image: ghcr.io/subspace/farmer:gemini-2a-2022-sep-10
     container_name: subspace-farmer
     volumes:
-      - ./farmer-data:/var/subspace:rw
+      - subspace-farmer-data:/var/subspace:rw
     ports:
       - "0.0.0.0:40333:40333"
     restart: unless-stopped
@@ -42,6 +42,9 @@ services:
       "--node-rpc-url", "ws://node:9944",
       "--ws-server-listen-addr", "0.0.0.0:9955",
       "--listen-on", "/ip4/0.0.0.0/tcp/40333",
-      "--reward-address", "st9AqVWsKAe2tb2Myajwn7kXLmqzvvv531a9g4FUfAg4zJQLA",
+      "--reward-address", "${WALLET_ADDRESS}",
       "--plot-size", "100G"
-    ]
+    ]gi
+volumes:
+  subspace-node-data:
+  subspace-farmer-data:
