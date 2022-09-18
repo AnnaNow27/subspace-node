@@ -1,0 +1,47 @@
+version: "3.7"
+services:
+  node:
+    image: ghcr.io/subspace/node:gemini-2a-2022-sep-10
+    container_name: subspace-node
+    volumes:
+      - subspace-node-data:/var/subspace:rw
+    ports:
+      - "0.0.0.0:30333:30333"
+    restart: unless-stopped
+    command: [
+      "--chain", "gemini-2a",
+      "--base-path", "/var/subspace",
+      "--execution", "wasm",
+      "--state-pruning", "archive",
+      "--port", "30333",
+      "--rpc-cors", "all",
+      "--rpc-methods", "safe",
+      "--unsafe-ws-external",
+      "--validator",
+      "--name", "AnnaNow27"
+    ]
+    healthcheck:
+      timeout: 5s
+      interval: 30s
+      retries: 5
+
+  farmer:
+    depends_on:
+      node:
+        condition: service_healthy
+    image: ghcr.io/subspace/farmer:gemini-2a-2022-sep-10
+    container_name: subspace-farmer
+    volumes:
+      - ./farmer-data:/var/subspace:rw
+    ports:
+      - "0.0.0.0:40333:40333"
+    restart: unless-stopped
+    command: [
+      "--base-path", "/var/subspace",
+      "farm",
+      "--node-rpc-url", "ws://node:9944",
+      "--ws-server-listen-addr", "0.0.0.0:9955",
+      "--listen-on", "/ip4/0.0.0.0/tcp/40333",
+      "--reward-address", "st9AqVWsKAe2tb2Myajwn7kXLmqzvvv531a9g4FUfAg4zJQLA",
+      "--plot-size", "100G"
+    ]
